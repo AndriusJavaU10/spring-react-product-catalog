@@ -1,6 +1,8 @@
 package lt.ca.javau10.online.security;
 
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import lt.ca.javau10.online.security.jwt.AuthTokenFilter;
 
@@ -66,12 +69,23 @@ public class SecurityConfig {
 		
 		@Bean
 	    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	        http.csrf(csrf -> csrf.disable())
+	        http.cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowCredentials(true);
+                configuration.setAllowedHeaders(List.of("*"));
+                return configuration;
+            }))
+	        
+	        .csrf(csrf -> csrf.disable())
 	            .authorizeHttpRequests(auth -> auth
-	            	.requestMatchers("/api/auth/**").permitAll()	                
-	                .requestMatchers("/api/customers/**").hasAnyRole("USER","ADMIN")
+	            	.requestMatchers("/api/auth/**").permitAll()	
+	            	.requestMatchers("/api/products/**").permitAll()
+	                .requestMatchers("/api/customers/").hasAnyRole("USER")	               
+	                .requestMatchers("/api/customers/**").hasAnyRole("MODERATOR","ADMIN")	           
 	                .requestMatchers("/api/test/*").permitAll() //.authenticated()
-	                .anyRequest().anonymous()    //.authenticated()
+	                .anyRequest().authenticated()
 	            
 	            )
 		         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
@@ -83,7 +97,7 @@ public class SecurityConfig {
 		     return http.build();
 	    }
 	    
-	
+		
 	       
 	
 	    

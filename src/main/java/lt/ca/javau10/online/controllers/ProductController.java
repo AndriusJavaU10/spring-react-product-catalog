@@ -36,7 +36,7 @@ public class ProductController {
 	}
 	
 //	 1. Get a list of all products as JSON
-	    @GetMapping()
+	    @GetMapping("/all")
 	    public List<Product> getAllProducts(){ // http://localhost:8080/api/products
 			return productService.gelAllProducts();
 	    }
