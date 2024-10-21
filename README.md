@@ -48,7 +48,7 @@ CREATE DATABASE myappdb;
 ```sql
 CREATE DATABASE myappdb;
 ```
-### .3 Check data:
+### 3. Check data:
 - View and modify the database tables that will be created using Spring Boot's automatic database generation.
 
 
