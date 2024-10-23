@@ -37,6 +37,7 @@ public class ProductController {
 	
 //	 1. Get a list of all products as JSON
 	    @GetMapping("/all")
+	    
 	    public List<Product> getAllProducts(){ // http://localhost:8080/api/products
 			return productService.gelAllProducts();
 	    }
@@ -49,6 +50,7 @@ public class ProductController {
 	    
 	   	    
 	 // POST - Create a new product
+	    
 	    @PostMapping(consumes = { "application/json", "application/json;charset=UTF-8" }, produces = "application/json")
 	    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
 	        Product createdProduct = productService.createProduct(product);

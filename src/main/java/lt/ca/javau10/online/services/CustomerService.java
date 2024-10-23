@@ -2,7 +2,7 @@ package lt.ca.javau10.online.services;
 
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +22,9 @@ import lt.ca.javau10.online.utils.EntityMapper;
 public class CustomerService implements UserDetailsService  {
 
 	private final CustomerRepository customerRepository;
+	@Autowired
+//    private RoleRepository roleRepository; 
+	
 	private final EntityMapper entityMapper;
 	private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 	
@@ -89,5 +92,33 @@ public class CustomerService implements UserDetailsService  {
 		logger.info("Loaded :"+ customer.toString());
 		return entityMapper.toCustomerDto(customer);
 	}
+
+
+		// Roles
+
+//	public Optional<Customer> findById(Long id) {
+//		 return customerRepository.findById(id);
+//	}
+//	
+//	public Customer save(Customer customer) {
+//        return customerRepository.save(customer);
+//    }
+//	
+//	 public Customer updateRoles(Long customerId, Set<String> roleNames) {
+//	        Customer customer = customerRepository.findById(customerId)
+//	            .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//	     // Find roles by name (ENUM values)
+//	        Set<Role> roles = new HashSet<>();
+//	        for (String roleName : roleNames) {
+//	            Role role = roleRepository.findByName(ERole.valueOf(roleName))
+//	                .orElseThrow(() -> new RuntimeException("Role not found"));
+//	            roles.add(role);
+//	        }
+//
+//	     // Update user roles
+//	        customer.setRoles(roles);
+//	        return customerRepository.save(customer);
+//	    }
 	
 }

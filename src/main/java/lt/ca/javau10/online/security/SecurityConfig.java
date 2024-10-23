@@ -81,9 +81,12 @@ public class SecurityConfig {
 	        .csrf(csrf -> csrf.disable())
 	            .authorizeHttpRequests(auth -> auth
 	            	.requestMatchers("/api/auth/**").permitAll()	
-	            	.requestMatchers("/api/products/**").permitAll()
-	                .requestMatchers("/api/customers/").hasAnyRole("USER")	               
-	                .requestMatchers("/api/customers/**").hasAnyRole("MODERATOR","ADMIN")	           
+	            	.requestMatchers("/api/products/all").permitAll()
+	                .requestMatchers("/api/products/all").hasAnyRole("USER", "ADMIN")	               
+	                .requestMatchers("/api/products/**").hasAnyAuthority("ROLE_MODERATOR", "ROLE_ADMIN")
+	                .requestMatchers("/api/customers/all").hasAnyAuthority("ROLE_MODERATOR", "ROLE_ADMIN")
+	                .requestMatchers("/api/customers**").hasRole("ADMIN")
+	                .requestMatchers("/api/customers/{id}/role").hasRole("ADMIN")
 	                .requestMatchers("/api/test/*").permitAll() //.authenticated()
 	                .anyRequest().authenticated()
 	            
