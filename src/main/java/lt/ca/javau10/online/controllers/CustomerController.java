@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +30,7 @@ public class CustomerController {
 	public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
        
-        
-	}
-	
+    }	
 	
 	
 	@PostMapping("/")
@@ -52,21 +53,28 @@ public class CustomerController {
 				.orElseGet( () -> ResponseEntity.notFound().build());
 	}
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteCustomer(@PathVariable Long id){
+	    customerService.deleteCustomer(id);
+	    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+		
+	@PutMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<CustomerDto> updateCustomer(
+										@PathVariable Long id, 
+										@RequestBody CustomerDto customerDto){
+		Optional<CustomerDto> customerInBox = customerService.updateCustomer(id, customerDto);
+		
+		return customerInBox
+				.map( ResponseEntity::ok )
+				.orElseGet( () -> ResponseEntity.notFound().build());
+	}
+	
 	
 	// Roles
 	
-//	@PutMapping("/{id}")
-//	@PreAuthorize("hasRole('ADMIN')")
-//	public ResponseEntity<CustomerDto> updateCustomer(
-//										@PathVariable Long id, 
-//										@RequestBody CustomerDto customerDto){
-//		Optional<CustomerDto> customerInBox = customerService.updateCustomer(id, customerDto);
-//		
-//		return customerInBox
-//				.map( ResponseEntity::ok )
-//				.orElseGet( () -> ResponseEntity.notFound().build());
-//	}
-//	
 //	@Transactional
 //	@DeleteMapping("/{id}")
 //	@PreAuthorize("hasRole('ADMIN')")
